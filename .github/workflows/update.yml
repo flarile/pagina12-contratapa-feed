@@ -1,0 +1,32 @@
+name: Actualizar feed contratapa
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Cada 15 minutos
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Instalar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Instalar requests
+        run: pip install requests
+
+      - name: Ejecutar script
+        run: python generate_feed.py
+
+      - name: Subir cambios
+        run: |
+          git config --global user.email "bot@example.com"
+          git config --global user.name "Bot"
+          git add feed.xml
+          git commit -m "Actualizar contratapa" || echo "Sin cambios"
+          git push
