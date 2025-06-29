@@ -1,32 +1,34 @@
 name: Actualizar feed contratapa
 
 on:
-  schedule:
-    - cron: '*/15 * * * *'  # Cada 15 minutos
   workflow_dispatch:
+  schedule:
+    - cron: '0 13 * * *'  # todos los días a las 10:00 (Argentina, UTC-3)
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Clonar repositorio
+      - name: Clonar el repositorio
         uses: actions/checkout@v3
 
-      - name: Instalar Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-
       - name: Instalar requests
-        run: pip install requests
+        run: pip3 install requests
 
       - name: Ejecutar script
-        run: python generate_feed.py
+        run: python3 generate_feed.py
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Traer últimos cambios del repositorio remoto
+        run: git pull origin main --rebase
 
       - name: Subir cambios
         run: |
-          git config --global user.email "bot@example.com"
-          git config --global user.name "Bot"
           git add feed.xml
           git commit -m "Actualizar contratapa" || echo "Sin cambios"
-          git push
+          git push origin main
