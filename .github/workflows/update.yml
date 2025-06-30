@@ -25,9 +25,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Traer últimos cambios del repositorio remoto
-  run: |
-    git reset --hard HEAD
-    git pull origin main --rebase
+        run: |
+          git reset --hard HEAD
+          git pull origin main --rebase
 
       - name: Subir cambios
         run: |
